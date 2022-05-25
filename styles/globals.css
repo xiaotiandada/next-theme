@@ -8,9 +8,11 @@ body {
   /* Your default theme */
   /* --background: white; */
   /* --foreground: black; */
+  --code-bg: #fafafa;
 }
 
 [data-theme="dark"] {
+  --code-bg: #4d4d4d;
   /* --background: black; */
   /* --foreground: white; */
 }

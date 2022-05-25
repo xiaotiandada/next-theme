@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider attribute="class">
+      <ThemeProvider>
         <Provider>
           <CssBaseline enableColorScheme />
           <Component {...pageProps} />

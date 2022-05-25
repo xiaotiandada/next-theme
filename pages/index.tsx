@@ -5,7 +5,23 @@ import styles from "../styles/Home.module.css";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Stack from "@mui/material/Stack";
+import Checkbox from "@mui/material/Checkbox";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
+import VolumeDown from "@mui/icons-material/VolumeDown";
+import VolumeUp from "@mui/icons-material/VolumeUp";
+
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 function SwitchTheme() {
   const [mounted, setMounted] = useState(false);
@@ -30,6 +46,13 @@ function SwitchTheme() {
 }
 
 const Home: NextPage = () => {
+  const [value, setValue] = useState<number | null>(2);
+  const [valueSlider, setValueSlider] = useState<number>(30);
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValueSlider(newValue as number);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -51,7 +74,87 @@ const Home: NextPage = () => {
           <SwitchTheme />
         </div>
 
-        <Button variant="contained">Hello World</Button>
+        <Card
+          sx={{
+            m: 2,
+          }}
+        >
+          <CardContent>
+            <Stack spacing={2} direction="row">
+              <Button variant="text">Text</Button>
+              <Button variant="contained">Contained</Button>
+              <Button variant="outlined">Outlined</Button>
+            </Stack>
+            <div>
+              <Checkbox {...label} defaultChecked />
+              <Checkbox {...label} />
+              <Checkbox {...label} disabled />
+              <Checkbox {...label} disabled checked />
+            </div>
+            <FormControl>
+              <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="female"
+                name="radio-buttons-group"
+              >
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                />
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                />
+                <FormControlLabel
+                  value="other"
+                  control={<Radio />}
+                  label="Other"
+                />
+              </RadioGroup>
+            </FormControl>
+            <Box
+              sx={{
+                "& > legend": { mt: 2 },
+              }}
+            >
+              <Typography component="legend">Controlled</Typography>
+              <Rating
+                name="simple-controlled"
+                value={value}
+                onChange={(event, newValue) => {
+                  setValue(newValue);
+                }}
+              />
+              <Typography component="legend">Read only</Typography>
+              <Rating name="read-only" value={value} readOnly />
+              <Typography component="legend">Disabled</Typography>
+              <Rating name="disabled" value={value} disabled />
+              <Typography component="legend">No rating given</Typography>
+              <Rating name="no-value" value={null} />
+            </Box>
+            <Box sx={{ width: 200 }}>
+              <Stack
+                spacing={2}
+                direction="row"
+                sx={{ mb: 1 }}
+                alignItems="center"
+              >
+                <VolumeDown />
+                <Slider
+                  aria-label="Volume"
+                  value={valueSlider}
+                  onChange={handleChange}
+                />
+                <VolumeUp />
+              </Stack>
+              <Slider disabled defaultValue={30} aria-label="Disabled slider" />
+            </Box>
+          </CardContent>
+        </Card>
+
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>
