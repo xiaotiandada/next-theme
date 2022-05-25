@@ -3,41 +3,47 @@ import type { AppProps } from "next/app";
 import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import * as React from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import CssBaseline from "@mui/material/CssBaseline";
 import {
   createTheme,
   ThemeProvider as ThemeProviderMUI,
-  styled,
 } from "@mui/material/styles";
-import { orange } from "@mui/material/colors";
+import { useTheme } from "next-themes";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+function Provider({ children }: { children: React.ReactNode }) {
+  const { theme: themeNext, resolvedTheme, setTheme } = useTheme();
+  console.log("themeNext", themeNext, resolvedTheme);
 
   const theme = React.useMemo(
     () =>
       createTheme({
-        status: {
-          danger: orange[500],
-        },
         palette: {
-          mode: prefersDarkMode ? "dark" : "light",
+          mode: (resolvedTheme || "light") as "light" | "dark",
         },
       }),
-    [prefersDarkMode]
+    [resolvedTheme]
   );
 
   return (
-    <ThemeProvider>
+    <>
+      <ThemeProviderMUI theme={theme}>{children}</ThemeProviderMUI>
+    </>
+  );
+}
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProviderMUI theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProviderMUI>
-    </ThemeProvider>
+      <ThemeProvider>
+        <Provider>
+          <CssBaseline enableColorScheme />
+          <Component {...pageProps} />
+        </Provider>
+      </ThemeProvider>
+    </>
   );
 }
 

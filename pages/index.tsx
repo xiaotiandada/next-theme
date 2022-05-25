@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
-import Checkbox from "@mui/material/Checkbox";
 
 declare module "@mui/material/styles" {
   interface Theme {
@@ -22,14 +21,7 @@ declare module "@mui/material/styles" {
   }
 }
 
-const CustomCheckbox = styled(Checkbox)(({ theme }) => ({
-  color: theme.status.danger,
-  "&.Mui-checked": {
-    color: theme.status.danger,
-  },
-}));
-
-const Home: NextPage = () => {
+function SwitchTheme() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -42,6 +34,16 @@ const Home: NextPage = () => {
     return null;
   }
 
+  return (
+    <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+      <option value="system">System</option>
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+    </select>
+  );
+}
+
+const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
@@ -58,13 +60,12 @@ const Home: NextPage = () => {
           Get started by editing{" "}
           <code className={styles.code}>pages/index.tsx</code>
         </p>
-        <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-          <option value="system">System</option>
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
+
+        <div>
+          <SwitchTheme />
+        </div>
+
         <Button variant="contained">Hello World</Button>
-        <CustomCheckbox defaultChecked />
         <div className={styles.grid}>
           <a href="https://nextjs.org/docs" className={styles.card}>
             <h2>Documentation &rarr;</h2>
