@@ -7,20 +7,6 @@ import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
-declare module "@mui/material/styles" {
-  interface Theme {
-    status: {
-      danger: string;
-    };
-  }
-  // allow configuration using `createTheme`
-  interface ThemeOptions {
-    status?: {
-      danger?: string;
-    };
-  }
-}
-
 function SwitchTheme() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
