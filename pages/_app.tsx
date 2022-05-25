@@ -12,6 +12,7 @@ import {
 import { useTheme } from "next-themes";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import App from "next/app";
+// import withDarkMode from "next-dark-mode";
 
 const lightTheme = createTheme({
   palette: {
@@ -66,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider>
-        <Provider theme={pageProps.theme}>
+        <Provider theme={pageProps?.theme}>
           <CssBaseline enableColorScheme />
           <Component {...pageProps} />
         </Provider>
@@ -77,6 +78,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
 // 如果需要更好的主题体验 可以考虑用 cookie 传递服务端的主题，因为 next-themes 使用的是 localstore 存储
 // 大部分情况 不需要
+// 可供参考：https://github.com/xeoneux/next-dark-mode/blob/main/src/index.tsx
 MyApp.getInitialProps = async (appContext: AppContext) => {
   console.log("appContext", appContext);
   console.log("appContext ctx req", appContext.ctx.req);
@@ -89,3 +91,4 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
 };
 
 export default MyApp;
+// export default withDarkMode(MyApp);
