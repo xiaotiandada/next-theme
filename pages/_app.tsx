@@ -11,6 +11,7 @@ import {
 } from "@mui/material/styles";
 import { useTheme } from "next-themes";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import App from "next/app";
 
 const lightTheme = createTheme({
   palette: {
@@ -33,12 +34,18 @@ function getActiveTheme(themeMode: ThemeMode) {
     : lightTheme;
 }
 
-function Provider({ children }: { children: React.ReactNode }) {
+function Provider({
+  children,
+  theme,
+}: {
+  children: React.ReactNode;
+  theme: ThemeMode;
+}) {
   const { theme: themeNext, resolvedTheme } = useTheme();
   console.log("themeNext", themeNext, resolvedTheme);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   console.log("prefersDarkMode", prefersDarkMode);
-  const [activeTheme, setActiveTheme] = useState(lightTheme);
+  const [activeTheme, setActiveTheme] = useState(getActiveTheme(theme));
 
   useEffect(() => {
     setActiveTheme(getActiveTheme(resolvedTheme as ThemeMode));
@@ -52,13 +59,14 @@ function Provider({ children }: { children: React.ReactNode }) {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
+  console.log("pageProps", pageProps);
   return (
     <>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider>
-        <Provider>
+        <Provider theme={pageProps.theme}>
           <CssBaseline enableColorScheme />
           <Component {...pageProps} />
         </Provider>
@@ -66,5 +74,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+// 如果需要更好的主题体验 可以考虑用 cookie 传递服务端的主题，因为 next-themes 使用的是 localstore 存储
+// 大部分情况 不需要
+MyApp.getInitialProps = async (appContext: AppContext) => {
+  console.log("appContext", appContext);
+  console.log("appContext ctx req", appContext.ctx.req);
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await App.getInitialProps(appContext);
+  appProps.pageProps.theme = "light";
+  console.log("appProps", appProps);
+
+  return { ...appProps };
+};
 
 export default MyApp;
